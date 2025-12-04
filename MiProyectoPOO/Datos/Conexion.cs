@@ -4,44 +4,40 @@ using System.Windows.Forms;
 
 namespace MiProyectoPOO.Datos
 {
-    public class ConexionBD
+    class ConexionBD
     {
-        private readonly string cadenaConexion;
+        MySqlConnection conexion = new MySqlConnection();
+        static string servidor = "localhost";
+        static string bd = "sistema_entradas";
+        static string usuario = "root";
+        static string password = "";
+        static string puerto = "3306";
+        string cadenaConexion =
+                        "server=" + servidor +
+                        ";database=" + bd +
+                        ";user=" + usuario +
+                        ";password=" + password +
+                        ";port=" + puerto + ";";
 
-        public ConexionBD()
-        {
-            string servidor = "localhost";
-            string bd = "sistema_entradas";
-            string usuario = "root";
-            string password = ""; // pon tu contraseña si la tenés
-            string puerto = "3306";
-
-            cadenaConexion = $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};Port={puerto};";
-        }
 
         public MySqlConnection ObtenerConexion()
         {
             try
             {
-                var conexion = new MySqlConnection(cadenaConexion);
+                conexion.ConnectionString = cadenaConexion;
                 conexion.Open();
-                return conexion;
+                MessageBox.Show("Se Conecto a la BD Correctamente");
             }
-            catch (Exception ex)
+
+            catch (MySqlException e)
             {
-                MessageBox.Show("Error al conectar con la BD: " + ex.Message);
-                return null;
+                MessageBox.Show("No se Conecto Correctamente a la BD" + e.ToString());
             }
+
+            return conexion;
         }
 
-        public void Cerrar(MySqlConnection conexion)
-        {
-            try
-            {
-                if (conexion != null && conexion.State == System.Data.ConnectionState.Open)
-                    conexion.Close();
-            }
-            catch { /* ignorar */ }
-        }
+
+
     }
 }

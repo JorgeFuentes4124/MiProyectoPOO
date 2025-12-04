@@ -21,7 +21,7 @@ namespace MiProyectoPOO.Clases
 
         public void CrearUbicacion(Espectaculo es, Ubicacion ub)
         {
-            UbicacionDatos.GuardarUbicacion(es.id, ub);
+           // UbicacionDatos.GuardarUbicacion(es.id, ub);
         }
 
         public void VerReporte(DateTime desde, DateTime hasta)
