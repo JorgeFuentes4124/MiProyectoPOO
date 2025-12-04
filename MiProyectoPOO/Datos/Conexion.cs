@@ -1,48 +1,47 @@
-﻿
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MiProyectoPOO.Datos
 {
-    class Conexion
+    public class ConexionBD
     {
-        MySqlConnection conexion = new MySqlConnection();
-        static string servidor = "localhost";
-        static string bd = "sistema_entradas";
-        static string usuario = "root";
-        static string password = "";
-        static string puerto = "3306";
-        string cadenaConexion =
-                        "server=" + servidor +
-                        ";database=" + bd +
-                        ";user=" + usuario +
-                        ";password=" + password +
-                        ";port=" + puerto + ";";
+        private readonly string cadenaConexion;
 
-
-        public MySqlConnection establecerConexion()
+        public ConexionBD()
         {
-            try {
-                conexion.ConnectionString = cadenaConexion;
-                conexion.Open();
-                MessageBox.Show("Se Conecto a la BD Correctamente");
-            }
+            string servidor = "localhost";
+            string bd = "sistema_entradas";
+            string usuario = "root";
+            string password = ""; // pon tu contraseña si la tenés
+            string puerto = "3306";
 
-            catch (MySqlException e){
-                MessageBox.Show("No se Conecto Correctamente a la BD" + e.ToString());
-            }
-                 
-            return conexion;
+            cadenaConexion = $"Server={servidor};Database={bd};Uid={usuario};Pwd={password};Port={puerto};";
         }
 
-        
+        public MySqlConnection ObtenerConexion()
+        {
+            try
+            {
+                var conexion = new MySqlConnection(cadenaConexion);
+                conexion.Open();
+                return conexion;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al conectar con la BD: " + ex.Message);
+                return null;
+            }
+        }
 
+        public void Cerrar(MySqlConnection conexion)
+        {
+            try
+            {
+                if (conexion != null && conexion.State == System.Data.ConnectionState.Open)
+                    conexion.Close();
+            }
+            catch { /* ignorar */ }
+        }
     }
 }
-
